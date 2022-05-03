@@ -6,9 +6,11 @@ var ansTwoEl = document.getElementById("ansTwo")
 var ansThreeEl = document.getElementById("ansThree")
 var ansFourEl = document.getElementById("ansFour")
 var endScreenEl = document.getElementById("endScreen")
-var intialsEl = document.getElementById("intials")
+var initialsEl = document.getElementById("initials")
 var timerEl = document.getElementById("timer")
 var beginBtnEl = document.getElementById("beginBtn")
+var responseEl = document.getElementById("response")
+var initialSubmitEl = document.getElementById("initialSubmit")
 var timeOnClock = 30
 
 timerEl.textContent = "Time Left: " + timeOnClock
@@ -30,12 +32,14 @@ var quizQuestions = [
         correctAnswer: "Hockey",
     },
     {
-        question: "Is Vinny Monaco good at coding?",
-        answerChoices: ["Who is Vinny Monaco?", "yes", "YES", "No"],
-        correctAnswer: "Hockey",
+        question: "Who will win the Stanley Cup?",
+        answerChoices: ["Avalanche", "Bruins", "Flames", "Lightning"],
+        correctAnswer: "Bruins",
     },
+
 ]
 var questionIndex = 0
+var countDown
 
 
 function startQuiz() {
@@ -48,19 +52,21 @@ function startQuiz() {
 }
 
 function startTimer() {
-    var countDown = setInterval(function () {
+        countDown = setInterval(function () {
         timeOnClock = timeOnClock - 1
         timerEl.textContent = "Time Left: " + timeOnClock
         if (timeOnClock <= 0) {
-            clearInterval(countDown)
-            // You will also end the quiz if they run out of time *hint call a function
+            endgame()
         }
     }, 1000)
 }
 
 function displayQuestion() {
 // you want to check what the question index is and if there are no more questions to be asked end the game
-
+    if (questionIndex == quizQuestions.length){
+        endgame()
+        return
+    }
     questionEl.textContent = quizQuestions[questionIndex].question
     ansOneEl.textContent = quizQuestions[questionIndex].answerChoices[0]
     ansTwoEl.textContent = quizQuestions[questionIndex].answerChoices[1]
@@ -79,22 +85,37 @@ function checkAnswer(event) {
         timeOnClock -= 10
         rightAnswer = false
     }
-    questionIndex++
+    questionIndex = questionIndex + 1
     if (rightAnswer) {
-        // set some indication that they got a right answer here
-
+        responseEl.textContent = "Right"
         setTimeout(function () {
-            // remove the indication
+            responseEl.textContent = ""
             displayQuestion()
         }, 1500)
     } else {
-        // set some indication that they got a wrong answer here
+        responseEl.textContent = "Wrong"
 
         setTimeout(function () {
-            // remove the indication
+            responseEl.textContent = ""
             displayQuestion()
         }, 1500)
     }
+}
+function endgame(){
+    clearInterval(countDown)
+    questionScreenEl.style.display = "none"
+    endScreenEl.style.display = "block"
+}
+function sumbitIntials(){
+    var userInput = initialsEl.value
+    var storageScores = JSON.parse(localStorage.getItem("highScores")) || []
+    var highScoreObj = {
+        score: timeOnClock,
+        name: userInput,
+    }
+    storageScores.push(highScoreObj)
+    localStorage.setItem("highScores", JSON.stringify(storageScores))
+    window.location.assign("highscores.html")
 }
 
 var quizAnswers = document.getElementsByClassName("answer")
@@ -103,7 +124,10 @@ for (var i = 0; i < quizAnswers.length; i++) {
     quizAnswers[i].addEventListener("click", checkAnswer)
 }
 
+
+
 beginBtnEl.addEventListener('click', startQuiz)
+initialSubmitEl.addEventListener('click', sumbitIntials)
 
 
 // function addNumbers(num1, num2){
@@ -114,3 +138,4 @@ beginBtnEl.addEventListener('click', startQuiz)
 
 // var answer = addNumbers(20, 60)
 // console.log(answer)
+/* loop over storage items and loop them into highscores.html into a div - new js and link to the new highscores.html*/
