@@ -62,7 +62,6 @@ function startTimer() {
 }
 
 function displayQuestion() {
-// you want to check what the question index is and if there are no more questions to be asked end the game
     if (questionIndex == quizQuestions.length){
         endgame()
         return
@@ -128,14 +127,3 @@ for (var i = 0; i < quizAnswers.length; i++) {
 
 beginBtnEl.addEventListener('click', startQuiz)
 initialSubmitEl.addEventListener('click', sumbitIntials)
-
-
-// function addNumbers(num1, num2){
-//     var total = num1 + num2
-//     timerEl.textContent = "Time Left: " + total
-//     return total
-// }
-
-// var answer = addNumbers(20, 60)
-// console.log(answer)
-/* loop over storage items and loop them into highscores.html into a div - new js and link to the new highscores.html*/
